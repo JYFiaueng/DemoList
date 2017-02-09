@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<p>请直接看代码，还有一种方式是使用新的API postMessage</p>
+	<button id="btn">改变</button>
+	<iframe src="片段识别符突破iframe同源限制b.html" frameborder="1" id="biframe"></iframe>
+	<script>
+		btn.onclick = function (){
+			biframe.src = '片段识别符突破iframe同源限制b.html#jiayufeng';
+		};
+		window.onhashchange = function (){
+			alert(window.location.hash);
+		};
+	</script>
+</body>
+</html>

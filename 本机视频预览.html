@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>本机视频预览</title>
+</head>
+<body>
+<h3>本机视频预览功能，选择一个十几M的mp4文件</h3>
+<div>
+	<h4>使用window.URL.createObjectURL方法对file对象生成一个dataURL，加载完成后将地址销毁</h4>
+	<input type="file" id="file">
+	<video src="" id="video" controls="controls"></video>
+</div>
+<div>
+	<h4>用FileReader对象的readAsDataURL方法读取视频文件，返回dataURL</h4>
+	<input type="file" id="file1">
+	<video src="" id="video1" controls="controls"></video>
+</div>
+<script>
+file.onchange = function (){
+	var video = document.getElementById('video');
+	var obj_url = window.URL.createObjectURL(file.files[0]);
+	video.src = obj_url;
+	video.play();
+	video.onload = function (){
+		window.URL.revokeObjectURL(obj_url);
+	};
+};
+
+file1.onchange = function (){
+	var video1 = document.getElementById('video1');
+	var reader = new FileReader();
+	reader.onload = function (e){
+		video1.src = reader.result;
+		video1.play();
+	};
+	reader.readAsDataURL(file1.files[0]);
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ImgURLToDataURLRevokeURL</title>
+</head>
+<body id="body">
+<h1>这个函数可以实现图片防盗链功能</h1>
+<pre>
+function ImgURlToDataURLRevokeURL(url, cb){
+	var canvas = document.createElement('CANVAS');
+	var ctx = canvas.getContext('2d');
+	var img = new Image();
+	var dataURLtoBlob = function(dataurl) {
+		var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+		while(n--){
+			u8arr[n] = bstr.charCodeAt(n);
+		}
+		return new Blob([u8arr], {type:mime});
+	};
+	img.crossOrigin = 'Anonymous';
+	img.onload = function(){
+		canvas.height = img.height;
+		canvas.width = img.width;
+		ctx.drawImage(img,0,0);
+		var dataURL = canvas.toDataURL('image/jpeg', 1);
+		var iimg = document.createElement("img");
+		iimg.src = window.URL.createObjectURL(dataURLtoBlob(dataURL));
+		iimg.onload = function(e) {
+			window.URL.revokeObjectURL(this.src);
+			cb(iimg);
+		};
+	};
+	img.src = url;
+}
+</pre>
+<script>
+function ImgURlToDataURLRevokeURL(url, cb){
+	var canvas = document.createElement('CANVAS');
+	var ctx = canvas.getContext('2d');
+	var img = new Image();
+	var dataURLtoBlob = function(dataurl) {
+		var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1], bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+		while(n--){
+			u8arr[n] = bstr.charCodeAt(n);
+		}
+		return new Blob([u8arr], {type:mime});
+	};
+	img.crossOrigin = 'Anonymous';
+	img.onload = function(){
+		canvas.height = img.height;
+		canvas.width = img.width;
+		ctx.drawImage(img,0,0);
+		var dataURL = canvas.toDataURL('image/jpeg', 1);
+		var iimg = document.createElement("img");
+		iimg.src = window.URL.createObjectURL(dataURLtoBlob(dataURL));
+		iimg.onload = function(e) {
+			window.URL.revokeObjectURL(this.src);
+			cb(iimg);
+		};
+	};
+	img.src = url;
+}
+ImgURlToDataURLRevokeURL('22.jpg', function (img){
+	body.appendChild(img);
+});
+</script>
+</body>
+</html>
+
+<!--参考 
+http://www.jb51.net/article/52911.htm
+http://www.webhek.com/data-url
+http://blog.csdn.net/cuixiping/article/details/45932793
+http://javascript.ruanyifeng.com/htmlapi/file.html
+ -->

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<button id="btn">改变</button>
+	<script>
+		btn.onclick = function (){
+			parent.location.href= '片段识别符突破iframe同源限制.html#jyflorem';
+		};
+		window.onhashchange = function (){
+			alert(window.location.hash);
+		};
+	</script>
+</body>
+</html>

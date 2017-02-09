@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>download</title>
+</head>
+<body id="body">
+<h3>点击连接，自动生成一个文件供下载</h3>
+<script>
+	var b = new Blob(['jiayufeng 哈哈 '+ new Date()]);
+	var a = document.createElement('a');
+	a.href = window.URL.createObjectURL(b);
+	a.download = 'lorem.txt';
+	a.textContent = 'Download';
+	body.appendChild(a);
+	//window.URL.revokeObjectURL(a.href);//这个方法的作用是取消掉前面已经生效的URL
+</script>
+</body>
+</html>
