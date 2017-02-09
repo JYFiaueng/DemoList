@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Fullscreen API</title>
+	<style>
+		#d{width: 200px;height: 200px;border: 1px solid #000;transition: all 3s;text-align: center;}
+		#d:-webkit-full-screen{
+			background-color: #2ECC71;
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+</head>
+<body>
+<p>只做了chrome的兼容，所有属性方法事件都需要webkit前缀</p>
+<div id="d">点我取消全屏，使用 :full-screen 伪类可以设置全屏样式</div>
+<input type="button" id="btn" value="全屏">
+<script>
+btn.onclick = function (){
+	d.webkitRequestFullScreen();
+	console.log(document.webkitFullscreenElement);
+	console.log(document.webkitIsFullScreen);
+	// document.webkitCancelFullScreen();
+};
+
+d.onclick = function (){
+	document.webkitExitFullscreen();
+	console.log(document.webkitIsFullScreen);
+};
+
+if(document.webkitFullscreenEnabled){
+	console.log('可以全屏');
+}else{
+	console.log('不可全屏');
+}
+
+document.addEventListener('webkitfullscreenchange', function (e){
+	console.log(e);
+	console.log(document.webkitIsFullScreen);
+});
+document.addEventListener('webkitfullscreenerror', function (e){
+	console.log(e);
+	console.log('全屏出错');
+});
+</script>
+</body>
+</html>
