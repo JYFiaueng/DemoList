@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	<title>functionList</title>
+	<style>
+		*{margin: 0;padding: 0;}
+		body{padding: 20px;}
+		ol{list-style: inside decimal;}
+		pre{background-color: #ccc;font-size: 18px;}
+	</style>
+</head>
+<body>
+	<h2>学JS必须要会的函数</h2>
+	<ol>
+		<li>
+			<h4>before函数，在原函数执行前执行</h4>
+			<pre>
+
+Function.prototype.before = function(beforefn){
+  var _self = this;
+  if(beforefn instanceof Function){
+    return function(){
+      beforefn.apply(this, arguments);
+      return _self.apply(this, arguments);
+    };
+  }
+};
+			</pre>
+		</li>
+		<li>
+			<h4>after函数，在原函数执行后执行</h4>
+			<pre>
+
+Function.prototype.after = function(afterfn){
+  var _self = this;
+  if(afterfn instanceof Function){
+    return function(){
+      var ret = _self.apply(this, arguments);
+      afterfn.apply(this, arguments);
+      return ret;
+    };
+  }
+};
+			</pre>
+		</li>
+		<li>
+			<h4>currying函数，柯里化</h4>
+			<pre>
+
+function currying(fun){
+  var args = [];
+  return function(){
+    if(arguments.length === 0){
+      return fun.apply(this, args);
+    }else{
+      [].push.apply(args, arguments);
+      return arguments.callee;
+    }
+  };
+};
+//应用
+var cost = (function(){
+  var m = 0;
+  return function(){
+    for(var i = 0; i < arguments.length; i++){
+      m += arguments[i];
+    }
+    return m;
+  };
+})();
+cost(1,2,3)(4)(5,6);
+cost();//21
+			</pre>
+		</li>
+		<li>
+			<h4>节流函数</h4>
+			<pre>
+
+function throttle(method, context){
+  clearTimeout(method.tId);
+  method.tId = setTimeout(function(){
+    methid.call(context);
+  }, 500);
+}
+			</pre>
+		</li>
+		<li>
+			<h4>模拟bind函数</h4>
+			<pre>
+
+if(!Function.prototype.bind){
+  Function.prototype.bind = function(oThis){
+    if(typeof this !== "function"){
+      throw new TypeError('');
+    }
+    var aArgs = Array.prototype.slice.call(arguments, 1),
+        fToBind = this,
+        fNOP = function(){},
+        fBound = function(){
+          return fToBind.apply( (this instanceof fNOP && oThis ? this : oThis), 
+                         aArgs.concat(Array.prototype.slice.call(arguments)) );
+        };
+    fNOP.prototype = this.prototype;
+    fBound.prototype = new fNOP();
+    return fBound;
+  }
+}
+			</pre>
+		</li>
+	</ol>
+</body>
+</html>
