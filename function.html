@@ -2,13 +2,17 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-	<title>functionList</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+	<title>Function List</title>
+  <script>
+    
+  </script>
 	<style>
 		*{margin: 0;padding: 0;}
-		body{padding: 20px;}
+		body{padding: 5px;}
 		ol{list-style: inside decimal;}
-		pre{background-color: #ccc;font-size: 18px;}
+    ol li{width: 100%;}
+		pre{background-color: #ccc;overflow-x: auto;}
 	</style>
 </head>
 <body>
@@ -61,7 +65,7 @@ function currying(fun){
   };
 };
 //应用
-var cost = (function(){
+var cost = currying((function(){
   var m = 0;
   return function(){
     for(var i = 0; i < arguments.length; i++){
@@ -69,7 +73,7 @@ var cost = (function(){
     }
     return m;
   };
-})();
+})());
 cost(1,2,3)(4)(5,6);
 cost();//21
 			</pre>
@@ -109,6 +113,90 @@ if(!Function.prototype.bind){
 }
 			</pre>
 		</li>
+    <li>
+      <h4>自动执行Generation函数</h4>
+      <pre>
+  
+function run(gen){
+  var args = [].slice.call(arguments, 1);
+  var it = gen.apply(this, args);
+  return Promise.resolve().then(function handleNext(value){
+    var next = it.next(value);
+    return (function handleResult(next){
+      if(next.done){
+        return next.value;
+      }else{
+        return Promise.resolve(next.value).then(handleNext, function handleErr(err){
+          return Promise.resolve(it.throw(err)).then(handleResult);
+        });
+      }
+    })(next);
+  });
+}
+      </pre>
+    </li>
+    <li>
+      <h4>模拟co模块（回调）</h4>
+      <pre>
+  
+function run(){
+  var gen = fn();
+  function next(err, data){
+    var it = gen.next(data);
+    if(it.done) return;
+    it.value(next);
+  }
+  next();
+}
+function thunk(fn){//封装函数
+  return function(...args){//封装参数
+    return function(callback){//封装回调
+      return fn.call(this, ...args, callback);
+    }
+  }
+}
+//需要执行的异步函数
+function t(data, cb){
+  setTimeout(function(){
+    cb(null, data);
+  }, 500);
+}
+//Generation函数
+function * gen(){
+  var d = yield thunk(t)('data');
+  console.log(d);
+}
+      </pre>
+    </li>
+    <li>
+      <h4>模拟co模块（Promise）</h4>
+      <pre>
+
+function run(gen){
+  var g = gen();
+  function next(data){
+    var result = g.next(data);
+    if (result.done) return result.value;
+    result.value.then(function(data){
+      next(data);
+    });
+  }
+  next();
+}
+//需要执行的异步函数
+function t(data){
+  return new Promsie(function(resolve, reject){
+    setTimeout(function(){
+      resolve(data);
+    }, 500);
+  });
+}
+//Generation函数
+function gen(){
+  yield t('data');
+}
+      </pre>
+    </li>
 	</ol>
 </body>
 </html>
