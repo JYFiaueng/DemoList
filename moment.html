@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://cdn.bootcss.com/moment.js/2.22.1/moment.min.js"></script>
+</head>
+<body>
+  <div>
+    <label for="">时间戳:</label> <input type="text" id="timestamp"></br>
+    <span id="format">填入时间戳</span>
+  </div>
+
+  <script>
+    document.getElementById('timestamp').addEventListener('change', function(event){
+      let v = event.target.value;
+      if (v.length === 10){
+        document.getElementById('format').innerHTML = moment(parseInt(v)*1000).format('YYYY MM DD hh:mm:ss');
+      }
+    });
+  </script>
+</body>
+</html>
