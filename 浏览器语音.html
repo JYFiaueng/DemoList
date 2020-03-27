@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<style>
+		div {
+			padding: 30px;
+		}
+		button {
+			padding: 5px;
+			margin: 10px;
+		}
+	</style>
+</head>
+<body>
+	<div id="content">
+		As we all realized that every one of us will fail during our life. Take me for an example, I fail in my exam. In fact, failure always does appear, which also means that failure is a daily occurrence, however, when facing the failure, different people have different attitudes.
+		众所周知，我们每个人在我们的一生中都会有过失败。就像我考试不及格。事实上，失败总是会出现的，这也意味着失败是一个司空见惯的现象。然而，面对失败时，不同的人持有不同的态度。
+</div>
+
+	<div>
+		<button id="startSpeech">听语音，请点击这里</button>
+		<button id="stopSpeech">停止语音播放</button>
+	</div>
+	<div id="btns"></div>
+</body>
+
+<script>
+
+if (!SpeechSynthesisUtterance) {
+	alert("您的浏览器不支持自动语音，请升级比较高端的浏览器")
+}
+
+let voices = []
+let voicesObj = {}
+
+document.getElementById('startSpeech').onclick = function () {
+	voices = speechSynthesis.getVoices()
+	let btnHtml = ''
+	voices.forEach(v => {
+		voicesObj[v.lang] = v
+		btnHtml += `<button class="videos" value="${v.lang}">${v.lang} | ${v.name}</button>`
+	})
+	document.getElementById('btns').innerHTML = btnHtml
+}
+
+document.getElementById('stopSpeech').onclick = function() {
+	speechSynthesis.cancel()
+}
+
+document.getElementById('btns').onclick = function(evt) {
+	speechSynthesis.cancel()
+	let lang = evt.target.value
+	let content = document.getElementById('content').textContent
+	speak(content, voicesObj[lang])
+}
+
+function speak(content, voice) {
+	let utterThis = new SpeechSynthesisUtterance(content)
+  utterThis.voice = voice
+	speechSynthesis.speak(utterThis)
+}
+
+</script>
+</html>
